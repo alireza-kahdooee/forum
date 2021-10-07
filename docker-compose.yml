@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+    app:
+        build:
+            args:
+                user: alireza
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: php
+        container_name: royalcode-php
+        restart: unless-stopped
+        working_dir: /var/www/html
+        volumes:
+            - ./:/var/www/html
+        networks:
+            - royalcode
+    db:
+        image: mysql:8.0.20
+        container_name: royalcode-mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - ./services/mysql:/var/lib/mysql
+        networks:
+            - royalcode
+    nginx:
+        image: nginx:stable-alpine
+        container_name: royalcode-nginx
+        restart: unless-stopped
+        ports:
+            - 80:80
+        volumes:
+            - ./:/var/www/html
+            - ./services/nginx:/etc/nginx/conf.d
+        networks:
+            - royalcode
+    composer:
+        networks:
+            - royalcode
+        image: composer:latest
+        container_name: royalcode-composer
+        volumes:
+            - ./:/var/www/html
+        working_dir: /var/www/html
+        depends_on:
+            - app
+networks:
+    royalcode:
+        driver: bridge
