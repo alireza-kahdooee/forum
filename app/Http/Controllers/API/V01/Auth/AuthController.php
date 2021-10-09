@@ -4,14 +4,18 @@ namespace App\Http\Controllers\API\V01\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Repositories\UserRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
      * Register new user
-     * @method Post
+     * @method POST
      * @param Request $request
      */
     public function register(Request $request)
@@ -22,23 +26,51 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users',
                 'password' => 'required',
             ], [], []);
-        $data = $request->except(['_token']);
-        $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        //Insert User into database
+        resolve(UserRepository::class)->create($request);
 
         return response()->json([
             'message' => 'user created successfully'
         ], 201);
     }
 
+    /**
+     * Login for user
+     * @method GET
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function login(Request $request)
     {
+        $this->validate($request,
+            [
+                'email' => 'required|email',
+                'password' => 'required',
+            ], [], []);
+        $data = $request->except(['_token']);
 
+        if (auth()->attempt([$data['email'], $data['password']])) {
+            return response()->json(Auth::user(), 200);
+        }
+
+        throw ValidationException::withMessages([
+            'email' => 'incorrect credentials',
+        ]);
+    }
+
+    public function user()
+    {
+        return response()->json(Auth::user(), 200);
     }
 
     public function logout()
     {
+        Auth::logout();
 
+        return response()->json([
+            'message' => 'logged out successfully'
+        ], 200);
     }
 }
