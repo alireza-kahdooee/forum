@@ -29,7 +29,7 @@ class CreateThreadsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             //            Best answer ID
-            $table->unsignedBigInteger('best_answer_id');
+            $table->unsignedBigInteger('best_answer_id')->nullable();
 
             $table->timestamps();
         });
