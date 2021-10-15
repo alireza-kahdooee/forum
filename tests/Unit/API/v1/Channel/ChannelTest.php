@@ -5,6 +5,7 @@ namespace Test\Unit\API\v1\Channel;
 use App\Http\Controllers\API\V01\Channel\ChannelController;
 use App\Models\Channel;
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,6 @@ class ChannelTest extends TestCase
         }
     }
 
-
     /**
      * Test all Channel list should be accessible.
      * @test
@@ -54,8 +54,9 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
-        $response = $this->actingAs($user)->postJson(route('channels.store'), []);
+        $response = $this->postJson(route('channels.store'), []);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -68,8 +69,9 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
-        $response = $this->actingAs($user)->postJson(route('channels.store'), [
+        $response = $this->postJson(route('channels.store'), [
             'name' => 'laravel'
         ]);
 
@@ -85,8 +87,9 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
-        $response = $this->actingAs($user)->json('PUT', route('channels.update'), []);
+        $response = $this->json('PUT', route('channels.update'), []);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -99,10 +102,11 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
 
         $channel = Channel::factory(['name' => 'laravel'])->create();
-        $response = $this->actingAs($user)->json('PUT', route('channels.update'), [
+        $response = $this->json('PUT', route('channels.update'), [
             'id' => $channel->id,
             'name' => 'react.js'
         ]);
@@ -120,9 +124,10 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
 
-        $response = $this->actingAs($user)->json('DELETE', route('channels.destroy'), []);
+        $response = $this->json('DELETE', route('channels.destroy'), []);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -135,9 +140,10 @@ class ChannelTest extends TestCase
         $this->registerRolesAndPermissions();
 
         $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $user->givePermissionTo('channel management');
         $channel = Channel::factory()->create();
-        $response = $this->actingAs($user)->json('DELETE', route('channels.destroy'), ['id' => $channel->id]);
+        $response = $this->json('DELETE', route('channels.destroy'), ['id' => $channel->id]);
 
         $response->assertStatus(Response::HTTP_OK);
     }
