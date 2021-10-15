@@ -14,10 +14,10 @@ services:
         volumes:
             - ./:/var/www/html
         networks:
-            - royalcode
+            - crm
     db:
         image: mysql:8.0.20
-        container_name: royalcode-mysql
+        container_name: crm-mysql
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
@@ -26,13 +26,16 @@ services:
             MYSQL_USER: ${DB_USERNAME}
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
+        tty: true
         volumes:
             - ./services/mysql:/var/lib/mysql
+        ports:
+            - 3306:3306
         networks:
-            - royalcode
+            - crm
     nginx:
         image: nginx:stable-alpine
-        container_name: royalcode-nginx
+        container_name: crm-nginx
         restart: unless-stopped
         ports:
             - 80:80
@@ -40,17 +43,17 @@ services:
             - ./:/var/www/html
             - ./services/nginx:/etc/nginx/conf.d
         networks:
-            - royalcode
+            - crm
     composer:
         networks:
-            - royalcode
+            - crm
         image: composer:latest
-        container_name: royalcode-composer
+        container_name: crm-composer
         volumes:
             - ./:/var/www/html
         working_dir: /var/www/html
         depends_on:
             - app
 networks:
-    royalcode:
+    crm:
         driver: bridge

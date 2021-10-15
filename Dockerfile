@@ -25,6 +25,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user && \
 chown -R $user:$user /home/$user
+RUN mkdir /var/lib/mysql && touch /var/lib/mysql/mysqlLiteForTest.sqlite && \
+chown -R $user:$user /var/lib/mysql/
 
 # Set working directory
 WORKDIR /var/www/html

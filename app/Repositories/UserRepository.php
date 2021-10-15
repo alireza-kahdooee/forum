@@ -13,11 +13,11 @@ class UserRepository
     /**
      * @param Request $request
      */
-    public function create(Request $request): void
+    public function create(Request $request): User
     {
         $data = $request->except(['_token']);
         $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        return User::create($data);
     }
 }
