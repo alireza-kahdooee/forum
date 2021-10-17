@@ -48,4 +48,6 @@ return [
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
     ],
 
+    // change / and /sanctum to /api
+    'prefix' => '/api'
 ];

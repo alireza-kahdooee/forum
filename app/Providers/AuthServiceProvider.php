@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Thread;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -29,6 +30,13 @@ class AuthServiceProvider extends ServiceProvider
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
+        });
+
+        Gate::define('update-thread', function ($user, Thread $thread) {
+           return $thread->user_id == $user->id;
+        });
+        Gate::define('delete-thread', function ($user, Thread $thread) {
+           return $thread->user_id == $user->id;
         });
     }
 }

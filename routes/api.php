@@ -21,4 +21,7 @@ Route::prefix('v1')->group(function () {
 //    Channel routes
     include __DIR__ . '/v1/channel_routes.php';
 
+//    Thread routes
+    include __DIR__ . '/v1/thread_routes.php';
+
 });
