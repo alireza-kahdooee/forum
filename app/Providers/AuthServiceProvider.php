@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Answer;
 use App\Models\Thread;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -33,10 +34,17 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('update-thread', function ($user, Thread $thread) {
-           return $thread->user_id == $user->id;
+            return $thread->user_id == $user->id;
         });
         Gate::define('delete-thread', function ($user, Thread $thread) {
-           return $thread->user_id == $user->id;
+            return $thread->user_id == $user->id;
+        });
+
+        Gate::define('update-answer', function ($user, Answer $answer) {
+            return $answer->user_id == $user->id;
+        });
+        Gate::define('delete-answer', function ($user, Answer $answer) {
+            return $answer->user_id == $user->id;
         });
     }
 }

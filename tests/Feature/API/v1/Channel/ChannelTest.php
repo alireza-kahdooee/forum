@@ -5,6 +5,7 @@ namespace Test\Feature\API\v1\Channel;
 use App\Http\Controllers\API\V01\Channel\ChannelController;
 use App\Models\Channel;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -13,6 +14,8 @@ use Tests\TestCase;
 
 class ChannelTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function registerRolesAndPermissions()
     {
         $roleInDatabase = Role::where('name', config('permission.default_roles')[0]);
@@ -141,5 +144,7 @@ class ChannelTest extends TestCase
         $response = $this->json('DELETE', route('channels.destroy'), ['id' => $channel->id]);
 
         $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertTrue(Channel::find($channel->id) == null);
     }
 }

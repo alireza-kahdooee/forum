@@ -2,20 +2,19 @@
 
 namespace Tests\Feature\API\v1\Thread;
 
-use App\Http\Controllers\API\V01\Channel\ThreadController;
+use App\Http\Controllers\API\v1\Thread\ThreadController;
 use App\Models\Channel;
 use App\Models\Thread;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ThreadTest extends TestCase
 {
-
+    use RefreshDatabase;
     /**
      * @test
      */

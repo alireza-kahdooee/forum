@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 
 class ThreadRepositories
 {
+    public function find($ids)
+    {
+        return Thread::find($ids);
+    }
     /**
      * Get All Channels
      * @return Channel[]|Collection

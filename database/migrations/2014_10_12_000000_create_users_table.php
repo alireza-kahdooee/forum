@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->integer('score')->default(0);
-            $table->boolean('active')->default(true);
+            $table->boolean('is_block')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
